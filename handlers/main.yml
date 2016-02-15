@@ -1,0 +1,6 @@
+---
+
+
+- name: restart Solr
+  command: "{{ solr_instance_name }} stop; {{ solr_instance_name  }} start -m 2g"
+
