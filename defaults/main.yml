@@ -14,3 +14,33 @@ solr_user: solr
 solr_port: 8983
 solr_install_service_script: install_solr_service.sh
 solr_data_dir: "/var/{{ solr_instance_name }}"
+
+solr_heap_space: "512m"
+
+zookeeper_version: 3.4.6
+zookeeper_url: http://www.us.apache.org/dist/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz
+
+apt_cache_timeout: 3600
+client_port: 2181
+init_limit: 5
+sync_limit: 2
+tick_time: 2000
+zoo_id: 1
+data_dir: /var/lib/zookeeper
+log_dir: /var/log/zookeeper
+zookeeper_dir: /opt/zookeeper-{{zookeeper_version}}
+solr_instances:
+  - "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
+conf_copy_and_collection_instance: "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
+solr_collections:
+  - name: rovi_media
+    upload_to_zookeeper: True
+    config_local_folder: solr_configs/rovi_media
+    copy_remote_folder: /home/ubuntu
+    config_remote_folder: /home/ubuntu/rovi_media
+    zookeeper_configset_name: rovi_media1
+    create_collection: True
+    collection_name: rovi_media
+    number_shards: 3
+    replication_factor: 2
+    max_shards_per_node: 2

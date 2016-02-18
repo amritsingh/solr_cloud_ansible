@@ -7,4 +7,3 @@ dependencies:
     oracle_java_version: 8
     oracle_java_version_update: 66
     sudo: True
-

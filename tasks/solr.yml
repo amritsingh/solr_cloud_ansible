@@ -1,0 +1,49 @@
+---
+
+# tasks file for solr
+- name: Install some prerequisites
+  apt: name={{ item }} state=installed
+  sudo: True
+  with_items:
+    - rsync
+    - unzip
+
+# - name: Install jdk
+- name: Download Solr version solr_version
+  get_url: url={{ solr_dl_url }} dest={{ solr_archive }}
+
+- name: Extract solr files
+  unarchive: src={{ solr_archive }} dest={{ solr_tmp_extract_dir }} copy=no
+  sudo: True
+
+- name: Install the Solr instance
+  command: creates=/etc/init.d/{{ solr_instance_name }} {{ solr_extracted }}/bin/{{ solr_install_service_script }} {{ solr_archive }} -d {{ solr_data_dir }} -p {{ solr_port }} -i {{ solr_home_parent }} -u {{ solr_user }}
+  sudo: True
+
+- name: Remove downloaded zip and extract directory
+  file: path={{ item }} state=absent
+  with_items: ["{{ solr_archive }}", "{{ solr_extracted }}"]
+  sudo: True
+
+- name: Copy solr.in.sh config file
+  template: src=solr.in.sh.j2 dest=/var/solr/solr.in.sh
+  tags: deploy
+  sudo: True
+  notify:
+    - restart solr
+
+- name: Restart Solr service
+  command: bash -lc "sudo service solr restart"
+  sudo: True
+# - name: Create cores
+#   command: bash -lc "{{ solr_instance_name }} create -c {{ item.core }}; cp {{ item.config_src }} {{ item.config_dest }}"
+#   with_items: cores_config
+#   sudo: True
+# 
+# - name: copy configs
+#   copy: src={{ item.config_src }} dest={{ item.config_dest }} mode="u=rw,g=r,o=r"
+#   with_items: cores_config
+#   sudo: True
+# 
+# - name: Start the Solr service
+#   service: name={{ solr_instance_name }} state=restarted args= "-m 2g"

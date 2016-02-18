@@ -1,0 +1,10 @@
+tickTime={{ tick_time }}
+dataDir={{ data_dir }}
+dataLogDir={{ log_dir }}
+clientPort={{ client_port }}
+initLimit={{ init_limit }}
+syncLimit={{ sync_limit }}
+
+{% for server in solr_instances|sort %}
+server.{{loop.index}}={{hostvars[server]['ec2_dns_name']}}:2888:3888
+{% endfor %}
