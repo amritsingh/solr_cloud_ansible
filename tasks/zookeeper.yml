@@ -26,7 +26,6 @@
   notify:
     - Restart zookeeper
 
-- name: Start zookeeper service
-  service: name=zookeeper state=started enabled=yes
+- name: Restart zookeeper service
+  command: bash -lc "sudo service zookeeper restart"
   sudo: True
-  tags: deploy

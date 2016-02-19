@@ -1,5 +1,5 @@
 ---
 
-#- include: zookeeper.yml
-#- include: solr.yml
+- include: zookeeper.yml
+- include: solr.yml
 - include: create_collection.yml

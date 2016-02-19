@@ -1,15 +1,15 @@
 ---
 
-#- name: copy conf folder to remote server
-#  copy: src={{item.config_local_folder }} dest={{ item.copy_remote_folder }} owner=ubuntu group=ubuntu
-#  with_items: "{{ solr_collections }}"
-#  when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
-#
-#- name: Upload to zookeeper and create collection
-#  command: "{{solr_home}}/server/scripts/cloud-scripts/zkcli.sh -zkhost 127.0.0.1:{{client_port}} -cmd upconfig -confdir {{item.config_remote_folder}} -confname {{item.zookeeper_configset_name}}"
-#  with_items: "{{ solr_collections }}"
-#  when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
-#
+- name: copy conf folder to remote server
+  copy: src={{item.config_local_folder }} dest={{ item.copy_remote_folder }} owner=ubuntu group=ubuntu
+  with_items: "{{ solr_collections }}"
+  when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
+
+- name: Upload to zookeeper and create collection
+  command: "{{solr_home}}/server/scripts/cloud-scripts/zkcli.sh -zkhost 127.0.0.1:{{client_port}} -cmd upconfig -confdir {{item.config_remote_folder}} -confname {{item.zookeeper_configset_name}}"
+  with_items: "{{ solr_collections }}"
+  when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
+
 - name: Install pip
   apt: name=python-pip state=installed
   sudo: True
