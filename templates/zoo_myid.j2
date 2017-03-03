@@ -1,0 +1,1 @@
+{% for solr_instance in solr_instances|sort %}{% if hostvars[solr_instance]['ec2_dns_name'] == hostvars[inventory_hostname]['ec2_dns_name'] %}{{ loop.index }}{% endif %}{% endfor %}

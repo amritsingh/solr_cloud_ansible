@@ -1,6 +1,9 @@
 ---
 
+- name: restart solr
+  service: name=solr state=restarted
+  sudo: True
 
-- name: restart Solr
-  command: "{{ solr_instance_name }} stop; {{ solr_instance_name  }} start -m 2g"
-
+- name: Restart zookeeper
+  service: name=zookeeper state=restarted
+  sudo: True

@@ -1,0 +1,29 @@
+---
+
+# - name: copy conf folder to remote server
+#   copy: src={{item.config_local_folder }} dest={{ item.copy_remote_folder }} owner=ubuntu group=ubuntu
+#   with_items: "{{ solr_collections }}"
+#   # when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
+
+- name: Upload to zookeeper and create collection
+  command: "sh {{solr_home}}/server/scripts/cloud-scripts/zkcli.sh -zkhost 127.0.0.1:{{client_port}} -cmd upconfig -confdir {{item.config_remote_folder}} -confname {{item.zookeeper_configset_name}}"
+  with_items: "{{ solr_collections }}"
+  when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
+  sudo: True
+
+- name: Install pip
+  apt: name=python-pip state=installed
+  sudo: True
+  when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
+
+- name: Install httplib2
+  pip: name=httplib2
+  sudo: True
+  when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"
+
+- name: Create collection
+  uri:
+    url: http://127.0.0.1:{{ solr_port }}/solr/admin/collections?action=CREATE&name={{item.collection_name}}&numShards={{item.number_shards}}&replicationFactor={{item.replication_factor}}&collection.configName={{item.zookeeper_configset_name}}&maxShardsPerNode={{item.max_shards_per_node}}
+    method: GET
+  with_items: "{{ solr_collections }}"
+  when: conf_copy_and_collection_instance == "{{ hostvars[inventory_hostname]['ec2_dns_name'] }}"

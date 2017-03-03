@@ -1,0 +1,7 @@
+---
+
+- name: Copy template
+  template: src=change_replica.py.j2 dest="/home/{{ user }}/change_replica.py" mode="u=rwx,g=x,o=x"
+
+- name: Run the script
+  command: "python /home/{{ user }}/change_replica.py"
