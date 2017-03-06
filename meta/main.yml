@@ -1,4 +1,21 @@
 ---
+galaxy_info:
+  author: Amrit Singh, Sravan Kumar
+  description: Ansible role to install Solr Cloud. Configuration is maintained in Zookeeper. Each EC2 instance running Solr also runs an instance of Zookeeper
+  license: MIT
+  min_ansible_version: 1.0
+  platforms:
+  - name: Ubuntu
+    versions:
+      - all
+  categories:
+    - web
+    - ansible
+    - solr
+    - solrcloud
+    - zookeeper
+    - aws
+    - ec2
 
 dependencies:
   - role: ansiblebit.oracle-java
